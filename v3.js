@@ -55,6 +55,14 @@
     addEventListener('scroll', () => { if (innerHeight + scrollY >= root.scrollHeight - 4) showAll(); }, { passive: true });
   }
   addEventListener('beforeprint', showAll);
+
+  // ---- the screenshots scroll by themselves whenever their stage is on screen, and rest when it is not ----
+  const stages = [...new Set($$('.roll, .pan').map((img) => img.closest('.stage')))].filter(Boolean);
+  if (!('IntersectionObserver' in window)) stages.forEach((st) => st.classList.add('play'));
+  else {
+    const playing = new IntersectionObserver((entries) => entries.forEach((e) => e.target.classList.toggle('play', e.isIntersecting)));
+    stages.forEach((st) => playing.observe(st));
+  }
   window.__showAll = showAll; // the capture script calls this
 
   // ---- the lit sentence ----

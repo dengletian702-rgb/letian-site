@@ -187,11 +187,12 @@ button { font: inherit; color: inherit; }
 .pc .scr { aspect-ratio: 16 / 10; }
 .ph .frame { padding: clamp(4px, .6vw, 9px); border-radius: clamp(18px, 2.6vw, 38px); background: #141a17; box-shadow: 0 40px 60px -34px rgba(27, 38, 32, .7); } /* taste-skill-ignore: device frame: an interface fragment */
 .ph .scr { aspect-ratio: 9 / 19.5; border-radius: clamp(14px, 2vw, 30px); }
-.roll { width: 100%; animation: roll var(--dur, 34s) ease-in-out 1s infinite alternate; animation-play-state: paused; }
+/* steady speed, and the first run skips the hold at the top so it moves as soon as it is seen */
+.roll { width: 100%; animation: roll var(--dur, 34s) linear calc(var(--dur, 34s) * -.04) infinite alternate; animation-play-state: paused; }
 .ph .roll { --dur: 30s; }
-.pan { width: 100%; height: 100%; object-fit: cover; object-position: top; animation: breathe 16s ease-in-out infinite alternate; animation-play-state: paused; }
-.case.in .roll, .case.in .pan { animation-play-state: running; }
-.stage:hover .roll, .stage:hover .pan { animation-play-state: paused; }
+.pan { width: 100%; height: 100%; object-fit: cover; object-position: top; animation: breathe 16s ease-in-out -4s infinite alternate; animation-play-state: paused; }
+.stage.play .roll, .stage.play .pan { animation-play-state: running; }
+@media (hover: hover) and (pointer: fine) { .frame:hover .roll, .frame:hover .pan { animation-play-state: paused; } }
 .tag { position: absolute; z-index: 2; top: clamp(-30px, -2vw, -16px); left: 14px; padding: 3px 14px 4px; border-radius: 6px; background: var(--ink); color: var(--sheet); font: 400 clamp(.85rem, .7rem + .35vw, 1.1rem)/1.3 var(--hand); transform: rotate(-3deg); white-space: nowrap; }
 .ph .tag { left: auto; right: -6px; transform: rotate(4deg); }
 .case-dark .tag { background: var(--lime); color: var(--ink); }
@@ -421,7 +422,7 @@ html:has(.lb[open]) { overflow: hidden; }
 @keyframes hop { 40% { transform: rotate(-8deg) translateY(-18px) scale(1.08); } }
 @keyframes zz { 50% { transform: translate(6px, -8px); } }
 @keyframes purr { 0%, 100% { transform: scale(1); } 50% { transform: scale(1.015, 1.03); } }
-@keyframes roll { 0%, 5% { transform: translateY(0); } 95%, 100% { transform: translateY(calc(-100% + 100cqh)); } }
+@keyframes roll { 0%, 4% { transform: translateY(0); } 96%, 100% { transform: translateY(calc(-100% + 100cqh)); } }
 @keyframes breathe { from { transform: scale(1); } to { transform: scale(1.08) translateY(-2%); } }
 
 @media (prefers-reduced-motion: reduce) {
