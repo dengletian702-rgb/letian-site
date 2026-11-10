@@ -565,3 +565,68 @@ html:has(.lb[open]) { overflow: hidden; }
   .pc .frame, .ph .frame, .doc .frame, .stk, .face { box-shadow: none; } /* taste-skill-ignore: this removes shadows for print */
   .verb { will-change: auto; }
 }
+
+/* ---------- language switch: EN / 中文, top right on both versions ---------- */
+.top-right { display: flex; align-items: center; gap: clamp(8px, 1.4vw, 16px); }
+.lang { display: inline-flex; align-items: stretch; min-height: 44px; overflow: hidden; border: 2px solid var(--ink); border-radius: 999px; background: var(--sheet); font-weight: 600; font-size: var(--s-small); }
+.lang a, .lang span { display: grid; place-items: center; padding: 0 13px; }
+.lang [aria-current] { background: var(--ink); color: var(--sheet); }
+.lang a:hover { background: var(--lime); text-decoration: none; }
+@media print { .lang { display: none; } }
+
+/* ---------- the English version: same desk, Latin measures ----------
+   English runs longer than Chinese and breaks only at spaces, so the name, the labels and the big headings get
+   their own sizes, and nothing is allowed to push a card wider than its column. */
+html[lang="en"] {
+  --display: "Bodoni 72", Didot, "Bodoni MT", "Playfair Display", "Times New Roman", serif;
+  --text: "Avenir Next", Avenir, "Segoe UI", system-ui, -apple-system, Roboto, "Helvetica Neue", Arial, "PingFang SC", "Microsoft YaHei", sans-serif;
+}
+html[lang="en"] :is(h1, h2, h3, h4, p, li, dd, dt, th, td, small, figcaption) { overflow-wrap: break-word; }
+html[lang="en"] .badge small { -webkit-hyphens: auto; hyphens: auto; }
+html[lang="en"] [lang="zh-CN"] { font-family: "PingFang SC", "Hiragino Sans GB", "Microsoft YaHei", sans-serif; font-style: normal; }
+
+html[lang="en"] .cv h1 { font-size: clamp(2.5rem, 1.3rem + 3.5vw, 4.6rem); letter-spacing: -.01em; }
+html[lang="en"] .cv-role { font-size: clamp(1rem, .88rem + .5vw, 1.3rem); line-height: 1.45; font-weight: 400; text-wrap: pretty; }
+html[lang="en"] .cv-role b { font-weight: 700; }
+html[lang="en"] .cv-en { margin-top: .7em; font-size: clamp(1.05rem, .9rem + .6vw, 1.5rem); }
+html[lang="en"] .cv-en [lang="zh-CN"] { font-size: .86em; }
+html[lang="en"] .cv-rows div { grid-template-columns: 3.8em 1fr; }
+html[lang="en"] .cv-also mark { display: inline-block; margin-right: .5em; padding: .1em .4em; border-radius: 3px; background: var(--lime); color: inherit; font-weight: 700; }
+html[lang="en"] .cv-also .eg { display: inline-block; }
+html[lang="en"] .memo dl div { grid-template-columns: 3.4em 1fr; }
+
+html[lang="en"] .stk { max-width: min(16em, 76vw); white-space: normal; text-align: center; }
+html[lang="en"] .disc { max-width: none; }
+
+html[lang="en"] .case h3 small { display: inline-block; margin-left: .25em; color: var(--soft); font: italic 400 .44em/1.2 var(--display); letter-spacing: 0; }
+html[lang="en"] .case h3 small [lang="zh-CN"] { font-size: .86em; font-weight: 500; }
+html[lang="en"] .badge b { font-size: clamp(.95rem, .82rem + .38vw, 1.15rem); }
+html[lang="en"] .lineup th { width: 28%; }
+html[lang="en"] .verb-note b { font-weight: 700; }
+html[lang="en"] .verb-note { max-width: 21em; }
+html[lang="en"] .note .see { display: inline-block; margin-left: 0; white-space: normal; }
+
+html[lang="en"] .svc-head h2 { font-size: clamp(2.5rem, 1.3rem + 3.4vw, 4.8rem); }
+html[lang="en"] .order dl div { grid-template-columns: 6.6em 1fr; }
+html[lang="en"] .fde-head h2 { font-size: clamp(3.2rem, 1.6rem + 6vw, 7.6rem); }
+html[lang="en"] .duty li { grid-template-columns: 1fr; gap: 2px; }
+html[lang="en"] .route h4 { font-size: clamp(1.35rem, 1rem + .9vw, 1.9rem); }
+html[lang="en"] .pace li { grid-template-columns: 9.4em 1fr; }
+html[lang="en"] .reach .mail .city { min-width: 5.4em; }
+html[lang="en"] .reach .mail + .mail { margin-top: 10px; }
+
+@media (max-width: 700px) {
+  .top-right { gap: 8px; }
+  .lang { min-height: 40px; }
+  .lang a, .lang span { padding: 0 10px; }
+  .act { padding: 0 16px; }
+  html[lang="en"] .cv h1 { font-size: 2.25rem; }
+  html[lang="en"] .cv-role { font-size: 1rem; }
+  html[lang="en"] .s4 { --x: auto; right: 12px; }
+  html[lang="en"] .now .part { font-size: 2.6rem; }
+  html[lang="en"] .lineup th { width: auto; }
+  html[lang="en"] .svc-head h2 { font-size: 2.5rem; }
+  html[lang="en"] .fde-head h2 { font-size: 3.4rem; }
+  html[lang="en"] .order dl div, html[lang="en"] .pace li { grid-template-columns: 1fr; }
+  html[lang="en"] .dg-t { line-height: 1.3; }
+}

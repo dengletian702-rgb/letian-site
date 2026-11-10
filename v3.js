@@ -9,23 +9,55 @@
   const clamp = (v, a, b) => Math.min(b, Math.max(a, v));
   const $$ = (s, el = document) => [...el.querySelectorAll(s)];
 
+  // ---- the page comes in two languages; the words this script writes follow <html lang> ----
+  const en = /^en/i.test(root.lang);
+  const T = en ? {
+    locale: 'en-GB',
+    here: (day) => "You're in New Zealand too, so this is a local call. " + (day ? "It's daytime now" : "It's night now, so a WhatsApp message is best"),
+    there: (day) => (day ? "It's daytime in Christchurch" : "It's night in Christchurch, so leave a WhatsApp message or an email"),
+    away: '',
+    soundOn: 'Sound on', soundOff: 'Mute',
+  } : {
+    locale: 'zh-CN',
+    here: (day) => '你也在这边，打这个是本地电话。' + (day ? '现在是白天' : '现在是夜里，先发微信吧'),
+    there: (day) => (day ? '那边是白天' : '那边是夜里，先发微信吧'),
+    away: '都通到我本人。你不在这三地的话，微信或 WhatsApp 最省事。',
+    soundOn: '开声音', soundOff: '静音',
+  };
+
+  // ---- EN / 中文: land on the same section of the other version ----
+  $$('[data-lang-link]').forEach((a) => a.addEventListener('click', () => {
+    const passed = $$('section[id], article[id]').filter((el) => el.getBoundingClientRect().top <= innerHeight * 0.4);
+    const id = passed.length ? passed[passed.length - 1].id : '';
+    a.href = a.getAttribute('href').split('#')[0] + (id && id !== 'top' ? '#' + id : '');
+  }));
+
   // ---- clocks ----
   const zones = $$('.zone');
   const nowLine = document.querySelector('[data-nowline]');
   const tip = document.querySelector('[data-tip]');
-  const time = (tz) => new Intl.DateTimeFormat('zh-CN', { timeZone: tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date());
+  const time = (tz) => new Intl.DateTimeFormat(T.locale, { timeZone: tz, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(new Date());
   const hour = (tz) => +new Intl.DateTimeFormat('en-GB', { timeZone: tz, hour: 'numeric', hourCycle: 'h23' }).format(new Date());
   const names = { 'Asia/Shanghai': '北京', 'Australia/Sydney': '悉尼', 'Pacific/Auckland': '奥克兰' };
+  // "UTC+13" in summer, "UTC+12" in winter; the written fallback stays if the browser cannot say
+  const offset = (tz) => {
+    try {
+      const part = new Intl.DateTimeFormat('en-US', { timeZone: tz, timeZoneName: 'shortOffset' }).formatToParts(new Date()).find((p) => p.type === 'timeZoneName');
+      return part.value.replace('GMT', 'UTC');
+    } catch (e) { return 'UTC+13'; }
+  };
   const tick = () => {
     zones.forEach((el) => {
       const tz = el.dataset.tz, h = hour(tz), day = h >= 8 && h < 22;
       el.querySelector('.clock').textContent = time(tz);
       const here = el.classList.contains('here');
       const k = day ? '(・∀・)' : '(－_－) zzZ';
-      const say = here ? '你也在这边，打这个是本地电话。' + (day ? '现在是白天' : '现在是夜里，先发微信吧') : (day ? '那边是白天' : '那边是夜里，先发微信吧');
+      const say = here ? T.here(day) : T.there(day);
       el.querySelector('.state').innerHTML = `${say} <span class="kao" aria-hidden="true">${k}</span>`;
     });
-    if (nowLine) nowLine.textContent = '此刻 ' + Object.entries(names).map(([tz, n]) => `${n} ${time(tz)}`).join(' · ');
+    if (nowLine) nowLine.textContent = en
+      ? `Christchurch, NZ · ${time('Pacific/Auckland')} now (${offset('Pacific/Auckland')})`
+      : '此刻 ' + Object.entries(names).map(([tz, n]) => `${n} ${time(tz)}`).join(' · ');
   };
   const mine = Intl.DateTimeFormat().resolvedOptions().timeZone || '';
   const region = /^(Asia\/(Shanghai|Chongqing|Chungking|Harbin|Urumqi|Kashgar)|PRC)$/.test(mine) ? 'cn'
@@ -33,7 +65,7 @@
     : /^(Pacific\/(Auckland|Chatham)|NZ)$/.test(mine) ? 'nz' : '';
   const match = zones.find((z) => z.dataset.cc === region);
   if (match) match.classList.add('here');
-  else if (tip) tip.textContent = '都通到我本人。你不在这三地的话，微信或 WhatsApp 最省事。';
+  else if (tip && T.away) tip.textContent = T.away;
   tick();
   setInterval(tick, 15000);
 
@@ -217,7 +249,7 @@
     let k = 0;
     const syncSound = (v) => {
       sound.setAttribute('aria-pressed', String(!v.muted));
-      sound.textContent = v.muted ? '开声音' : '静音';
+      sound.textContent = v.muted ? T.soundOn : T.soundOff;
     };
     const show = (i) => {
       k = (i + shots.length) % shots.length;

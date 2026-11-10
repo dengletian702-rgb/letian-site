@@ -8,10 +8,12 @@ The site of Letian Deng (邓乐天): marketing and AI workflow work between Chin
 
 | Path | What it is |
 | --- | --- |
-| `index.html` | The whole page: work, projects, skills, services, FDE team, contact |
+| `index.html` | The whole page in Chinese: work, projects, skills, services, FDE team, contact |
+| `en/index.html` | The same page in English, served at `/en/`. It shares `v3.css`, `v3.js` and `assets/` with the Chinese page; the EN / 中文 switch in the top bar lands on the same section of the other version |
 | `v3.css` | Styles, including the phone layout and print rules |
 | `v3.js` | Scroll reveals and the Daygap lightbox (keyboard, swipe, sound toggle) |
 | `assets/` | Only the images and clips the page uses |
+| `assets/og/` | Link-preview images (Open Graph), one per language |
 
 No framework, no build step, no tracking. The page works without JavaScript; the script only adds motion and the lightbox.
 
