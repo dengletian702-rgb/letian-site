@@ -630,3 +630,10 @@ html[lang="en"] .reach .mail + .mail { margin-top: 10px; }
   html[lang="en"] .order dl div, html[lang="en"] .pace li { grid-template-columns: 1fr; }
   html[lang="en"] .dg-t { line-height: 1.3; }
 }
+
+/* ---------- the brand film: one wide player on the dark mat ---------- */
+.case-film .stage { display: block; padding-top: clamp(44px, 5vw, 72px); }
+.case-film h3 small { white-space: nowrap; }
+.film { position: relative; max-width: 1040px; margin: 0 auto; }
+.film video { display: block; width: 100%; height: auto; aspect-ratio: 16 / 9; border-radius: clamp(10px, 1.4vw, 18px); background: #000; box-shadow: 0 40px 60px -34px rgba(0, 0, 0, .8); }
+@media (max-width: 700px) { .case-film .stage { padding: 30px 12px 20px; } }
